@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DB_URL")
+}
+
+model resedent {
+  id          Int           @id @default(autoincrement())
+  name        String
+  img         String
+  text        String        @db.Text
+  tagresenent tagresenent[] @relation("resedenttotagresenent")
+}
+
+model tagresenent {
+  id       Int        @id @default(autoincrement())
+  name     String     @unique
+  resedent resedent[] @relation("resedenttotagresenent")
+}
+
+model privilege {
+  id        Int    @id @default(autoincrement())
+  name      String
+  text_link String
+  href_link String
+  tag       String
+}
+
+model project {
+  id   Int    @id @default(autoincrement())
+  name String
+  text String @db.Text
+  url  String
+}

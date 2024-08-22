@@ -1,0 +1,6 @@
+/node_modules
+.env
+roadmap.png
+*.log
+test.js
+package-lock.json
