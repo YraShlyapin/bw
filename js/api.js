@@ -2,6 +2,7 @@ import express from 'express'
 import { PrismaClient } from '@prisma/client'
 
 import { writeLog, clearObject }  from './functions.js'
+import multerStorage from './multer.js'
 
 const prisma = new PrismaClient()
 const router = express.Router()
@@ -41,9 +42,11 @@ router.get('/allResedent', async (req, res) => {
     }
 })
 
-router.post('/resedent', async (req, res) => {
+router.post('/resedent', multerStorage.single('file'), async (req, res) => {
+    let data = req.body
+    data.img = req.file.filename
     await prisma.resedent.create({
-        data: req.body
+        data
     })
     .then(o => {
         writeLog(`create resedent`, {obj: o})
