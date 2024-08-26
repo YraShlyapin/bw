@@ -46,7 +46,9 @@ router.get('/allResedent', async (req, res) => {
 
 router.post('/resedent', multerStorage.single('avatar'), async (req, res) => {
     let data = clearObject(req.body)
-    data.img = req.file.filename
+    if (req.file) {
+        data.img = req.file.filename
+    }
     await prisma.resedent.create({
         data
     })
@@ -94,12 +96,16 @@ router.route('/resedent/:id')
                 res.status(400).send(e)
             })
     })
-    .put(async (req, res) => {
+    .put(multerStorage.single('avatar'), async (req, res) => {
+        let data = clearObject(req.body)
+        if (req.file) {
+            data.img = req.file
+        }
         await prisma.resedent.update({
             where: {
                 id: Number(req.params.id)
             },
-            data: clearObject(req.body)
+            data
         })
             .then(o => {
                 writeLog(`edite resedent on`, {obj: o})
@@ -108,7 +114,7 @@ router.route('/resedent/:id')
             .catch(e => {
                 writeLog(`error edite resedent`, {err: e})
                 res.status(400).send(e)
-            })
+            })    
     })
 
 
@@ -309,6 +315,21 @@ router.route('/privilege/:id')
                 res.status(400).send(e)
             })
     })
+
+
+
+router.get('/tagOnPrivilege', async (req, res) => {
+    await prisma.privilege.findMany()
+        .then(o => {
+            let all = o.reduce((acc, now) => {
+                if (!acc.includes(now.tag)) {
+                    acc.push(now.tag)
+                }
+                return acc
+            },[])
+            res.status(200).send(all)
+        })
+})
 
 
 
