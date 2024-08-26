@@ -1,5 +1,5 @@
 import express from 'express'
-import { writeLog } from './js/functions.js'
+import { writeLog, getAllFileName } from './js/functions.js'
 
 import api from './js/api.js'
 import middleware from './js/middleware.js'
@@ -18,6 +18,19 @@ app.use(middleware)
 app.use('/api', api)
 
 app.use('/image', express.static(path.join(__dirname, 'image')))
+
+app.get('/image', (req, res) => {
+    let html = '<div style="display: flex;flex-wrap: wrap;justify-content: space-evenly;">'
+    for (let file of getAllFileName()) {
+        html += `<a href="/image/${file}" style="text-decoration:none;color:black;display: flex;width: 300px;flex-direction: column;align-items: center;">
+        <img width="100%" src="/image/${file}">
+        <p>${file}</p>
+        </a>`
+    }
+    html += '</div>'
+    res.set('Content-Type', 'text/html')
+    res.send(html)
+})
 
 app.listen(port, host, (err) => {
     if (err) throw err

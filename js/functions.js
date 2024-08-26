@@ -2,6 +2,8 @@ import fs from 'fs'
 import path from 'path'
 import 'dotenv/config'
 
+const __dirname = path.resolve()
+
 export function writeLog(text, {obj = {}, err = ''}) {
     let logMessage = new Date() + ' ' + text
     if (Object.keys(obj).length) {
@@ -11,8 +13,12 @@ export function writeLog(text, {obj = {}, err = ''}) {
         logMessage += '\n' + err
     }
     logMessage += '\n'
-    let pathToFile = path.join(path.resolve(), process.env.NAME_LOG || 'log.log')
+    let pathToFile = path.join(__dirname, process.env.NAME_LOG || 'log.log')
     fs.appendFileSync(pathToFile, logMessage)
+}
+
+export function getAllFileName() {
+    return fs.readdirSync(path.join(__dirname, 'image'))
 }
 
 export function clearObject(obj) {
