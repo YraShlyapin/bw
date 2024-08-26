@@ -31,3 +31,5 @@ export function clearObject(obj) {
 function formatData(data) {
     return `${data.getFullYear()} ${data.getMonth()+1} ${data.getDate()} ${[data.getHours(),data.getMinutes(),data.getSeconds()].join(':')}`
 }
+
+getAllFileName()

@@ -77,6 +77,7 @@ router.route('/resedent/:id')
                     res.sendStatus(404)
                 }
             })
+            .catch(e => res.status(400).send(e))
     })
     .delete(async (req, res) => {
         await prisma.resedent.delete({
@@ -112,47 +113,64 @@ router.route('/resedent/:id')
 
 
 
-// router.route('/tagOnResedent/:id')
-//     .get(async (req, res) => {
-//         await prisma.tagresenent.findMany({
-//             where: {
-//                 resedent: {
-//                     some: {
-//                         id: Number(req.params.id)
-//                     }
-//                 }
-//             }
-//         })
-//             .then()
-//     })
-//     .delete(async(req, res) => {
-//         await prisma.resedent.update({
-//             where: {
-//                 id: Number(req.params.id)
-//             },
-//             data: {
-//                 tagresenent: {
-//                     disconnect: req.body.map(o => {
-//                         return {id:o}
-//                     })
-//                 }
-//             }
-//         })
-//     })
-//     .put(async(req, res) => {
-//         await prisma.resedent.update({
-//             where: {
-//                 id: Number(req.params.id)
-//             },
-//             data: {
-//                 tagresenent: {
-//                     connect: req.body.map(o => {
-//                         return {id:o}
-//                     })
-//                 }
-//             }
-//         })
-//     })
+router.route('/tagOnResedent/:id')
+    .get(async (req, res) => {
+        await prisma.tagresenent.findMany({
+            where: {
+                resedent: {
+                    some: {
+                        id: Number(req.params.id)
+                    }
+                }
+            }
+        })
+            .then(o => res.status(200).send(o))
+            .catch(e => res.status(400).send(e))
+    })
+    .delete(async(req, res) => {
+        await prisma.resedent.update({
+            where: {
+                id: Number(req.params.id)
+            },
+            data: {
+                tagresenent: {
+                    disconnect: req.body.map(o => {
+                        return {id:o}
+                    })
+                }
+            }
+        })
+            .then(o => {
+                writeLog(`delete tag from resedent`, {obj: o})
+                res.status(200).send(o)
+            })
+            .catch(e => {
+                writeLog(`error delete tag from reseden`, {err: e})
+                res.status(400).send(e)
+            })
+    })
+    .put(async(req, res) => {
+        await prisma.resedent.update({
+            where: {
+                id: Number(req.params.id)
+            },
+            data: {
+                tagresenent: {
+                    connect: req.body.map(o => {
+                        return {id:o}
+                    })
+                }
+            }
+        })
+            .then(o => {
+                writeLog(`add tag on reseden`, {obj: o})
+                res.status(200).send(o)
+            })
+            .catch(e => {
+                writeLog(`error add tag on reseden`, {err: e})
+                res.status(400).send(e)
+            })
+    })
 
 
 
@@ -189,6 +207,7 @@ router.route('/tag/:id')
                     res.sendStatus(404)
                 }
             })
+            .catch(e => res.status(400).send(e))
     })
     .delete(async (req, res) => {
         await prisma.tagresenent.delete({
@@ -257,6 +276,7 @@ router.route('/privilege/:id')
                     res.sendStatus(404)
                 }
             })
+            .catch(e => res.status(400).send(e))
     })
     .delete(async (req, res) => {
         await prisma.privilege.delete({
@@ -325,6 +345,7 @@ router.route('/project/:id')
                     res.sendStatus(404)
                 }
             })
+            .catch(e => res.status(400).send(e))
     })
     .delete(async (req, res) => {
         await prisma.project.delete({

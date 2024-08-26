@@ -20,16 +20,15 @@ app.use('/api', api)
 app.use('/image', express.static(path.join(__dirname, 'image')))
 
 app.get('/image', (req, res) => {
-    let html = '<div style="display: flex;flex-wrap: wrap;justify-content: space-evenly;">'
+    res.set('Content-Type', 'text/html')
+    res.write('<div style="display: flex;flex-wrap: wrap;justify-content: space-evenly;">')
     for (let file of getAllFileName()) {
-        html += `<a href="/image/${file}" style="text-decoration:none;color:black;display: flex;width: 300px;flex-direction: column;align-items: center;">
+        res.write(`<a href="/image/${file}" style="text-decoration:none;color:black;display: flex;width: 300px;flex-direction: column;align-items: center;">
         <img width="100%" src="/image/${file}">
         <p>${file}</p>
-        </a>`
+        </a>`)
     }
-    html += '</div>'
-    res.set('Content-Type', 'text/html')
-    res.send(html)
+    res.write('</div>')
 })
 
 app.listen(port, host, (err) => {
