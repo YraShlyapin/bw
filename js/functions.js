@@ -5,7 +5,7 @@ import 'dotenv/config'
 const __dirname = path.resolve()
 
 export function writeLog(text, {obj = {}, err = ''}) {
-    let logMessage = new Date() + ' ' + text
+    let logMessage = formatData(new Date()) + ' ' + text
     if (Object.keys(obj).length) {
         logMessage += ' ' + JSON.stringify(obj)
     }
@@ -26,4 +26,8 @@ export function clearObject(obj) {
     .filter(([k,v]) => {
         return v != null && v != ''
     }))
+}
+
+function formatData(data) {
+    return `${data.getFullYear()} ${data.getMonth()+1} ${data.getDate()} ${[data.getHours(),data.getMinutes(),data.getSeconds()].join(':')}`
 }

@@ -7,6 +7,8 @@ import multerStorage from './multer.js'
 const prisma = new PrismaClient()
 const router = express.Router()
 
+
+
 router.get('/allResedent', async (req, res) => {
     if (req.query?.tag) {
         await prisma.resedent.findMany({
@@ -108,7 +110,8 @@ router.route('/resedent/:id')
             })
     })
 
-//TODO it
+
+
 // router.route('/tagOnResedent/:id')
 //     .get(async (req, res) => {
 //         await prisma.tagresenent.findMany({
@@ -120,6 +123,7 @@ router.route('/resedent/:id')
 //                 }
 //             }
 //         })
+//             .then()
 //     })
 //     .delete(async(req, res) => {
 //         await prisma.resedent.update({
@@ -149,6 +153,8 @@ router.route('/resedent/:id')
 //             }
 //         })
 //     })
+
+
 
 router.get('/allTag', async (req, res) => {
     await prisma.tagresenent.findMany()
@@ -216,25 +222,75 @@ router.route('/tag/:id')
             })
     })
 
-//TODO do it
-// router.get('/allPrivilege', async (req, res) => {
-//     await prisma.privilege.findMany()
-//         .then(o => res.status(200).send(o))
-// })
 
-// router.post('/privilege', async (req, res) => {
-//     await prisma.privilege.create({
-//         data: req.body
-//     })
-//         .then(o => {
-//             writeLog(`create privilege`, {obj: o})
-//             res.status(200).send(o)
-//         })
-//         .catch(e => {
-//             writeLog(`error create privilege`, {err: e})
-//             res.status(400).send(e)
-//         })
-// })
+
+router.get('/allPrivilege', async (req, res) => {
+    await prisma.privilege.findMany()
+        .then(o => res.status(200).send(o))
+})
+
+router.post('/privilege', async (req, res) => {
+    await prisma.privilege.create({
+        data: req.body
+    })
+        .then(o => {
+            writeLog(`create privilege`, {obj: o})
+            res.status(200).send(o)
+        })
+        .catch(e => {
+            writeLog(`error create privilege`, {err: e})
+            res.status(400).send(e)
+        })
+})
+
+router.route('/privilege/:id')
+    .get(async (req, res) => {
+        await prisma.privilege.findFirst({
+            where: {
+                id: Number(req.params.id)
+            }
+        })
+            .then(o => {
+                if (o) {
+                    res.status(200).send(o)
+                }else {
+                    res.sendStatus(404)
+                }
+            })
+    })
+    .delete(async (req, res) => {
+        await prisma.privilege.delete({
+            where: {
+                id: Number(req.params.id)
+            }
+        })
+            .then(o => {
+                writeLog(`delete privilege`, {obj: o})
+                res.status(200).send(o)
+            })
+            .catch(e => {
+                writeLog(`error delete privilege`, {err: e})
+                res.status(400).send(e)
+            })
+    })
+    .put(async (req, res) => {
+        await prisma.privilege.update({
+            where: {
+                id: Number(req.params.id)
+            },
+            data: clearObject(req.body)
+        })
+            .then(o => {
+                writeLog(`edite privilege`, {obj: o})
+                res.status(200).send(o)
+            })
+            .catch(e => {
+                writeLog(`error edite privilege`, {err: e})
+                res.status(400).send(e)
+            })
+    })
+
+
 
 router.get('/allProject', async (req, res) => {
     await prisma.project.findMany()
